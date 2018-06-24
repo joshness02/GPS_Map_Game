@@ -1,0 +1,110 @@
+<html>
+    <head>
+        <title>GPS Map Game</title>
+        <style>
+        #map {
+            height: 90%;
+            width: 100%;
+            left: 0;
+            position: absolute;
+            top: 0;
+            background-color: grey;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="map">
+            <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-HKwt2Uu91LqjSrUWpY_44icEQ4hFkwg&callback=initMap">
+            </script>
+        </div>
+        <script>
+        var google_map;
+            var data = '41.71843600312761 -93.10233747878334 treasure.png#\
+41.71843500209489 -93.10228651681206 bomb.png#\
+41.71847604442375 -93.10233479657433 bomb.png#\
+41.71844100829101 -93.10238575854561 bomb.png#\
+41.71840296903949 -93.10233747878334 bomb.png#\
+41.7184396512727 -93.10251458036095 first-aid.png#\
+41.718457669858054 -93.10305504547745 treasure.png#\
+41.71840361408689 -93.10305102216392 treasure.png#\
+41.718352561372384 -93.10306979762703 bomb.png#\
+41.718355564474344 -93.10305236326843 bomb.png#\
+41.71835456344035 -93.10303627001434 bomb.png#\
+41.71846667914882 -93.10229463922172 bomb.png#\
+41.71846968224547 -93.10237510549217 bomb.png#\
+41.71841362441831 -93.10229598032623 bomb.png#\
+41.718415626484436 -93.10237778770119 bomb.png#\
+41.718759890720754 -93.10245877732825 treasure.png#\
+41.71856569105921 -93.10232561969917 treasure.png#\
+41.71822444575968 -93.10201980575147 treasure.png#\
+41.718360571627485 -93.10170758660507 treasure.png#\
+41.71831246052103 -93.10298289870451 first-aid.png#\
+41.7184425948925 -93.10304995392988 first-aid.png#\
+41.71815229477902 -93.10352738713453 bomb.png#\
+41.71807821798836 -93.103520681612 bomb.png#\
+41.718126267808245 -93.10352738713453 treasure.png#\
+41.718150292704735 -93.10345362638662 first-aid.png#\
+41.71812526677069 -93.10344692086409 first-aid.png#\
+41.718100240826935 -93.10344557975958 first-aid.png#\
+41.71799066264077 -93.10387875651548 first-aid.png#\
+41.718156835008266 -93.10362394665907 first-aid.png#\
+41.71824292413812 -93.10386936878393 first-aid.png#\
+41.717857176603204 -93.10368966077993 first-aid.png#\
+41.71783915784949 -93.10390691971014 bomb.png#\
+41.71801233788432 -93.10357700800131 bomb.png#\
+41.71810151246904 -93.10388605581159 bomb.png#\
+41.71817358715928 -93.10374255762929 bomb.png#\
+41.71789329624311 -93.10378681407803 treasure.png#\
+41.717976382606466 -93.10366879688138 treasure.png#\
+41.71817058404881 -93.10383777604932 treasure.png#\
+41.71801141899253 -93.10375596867436 treasure.png#\
+41.71821065611408 -93.10366879688138 treasure.png#';
+        var markers = data.split("#");
+        var all_markers = [];
+        var playerPos, playerOldPos;
+        function placeMarker(pos, icon){
+            var marker = new google.maps.Marker({
+                position: pos,
+                map: google_map,
+                icon: icon,
+                draggable: true,
+            });
+            return marker;
+        }
+        function initMap() {
+                google_map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: {lat: 41.719081, lng: -93.102805}
+            });
+            for(var i = 0; i < markers.length; i++){
+                var marker = markers[i].trim();
+                marker = marker.split(" ");
+                var lat = marker[0];
+                var lng = marker[1];
+                var icon = marker[2];
+                var pos = new google.maps.LatLng(lat, lng);
+                all_markers.push(placeMarker(pos, icon));
+            }
+            if(navigator.geolocation){
+                navigator.geolocation.watchPosition(setMyPosition);
+            }else{
+                alert("Unable to use geolocation");
+            }
+        }
+        function setMyPosition(position){
+            if(playerOldPos){
+                playerOldPos.setMap(null);
+            }
+            
+            
+            var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            var marker = placeMarker(pos, "player.png");
+            playerPos = pos;
+            playerOldPos = playerPos;
+            
+        }
+        </script>
+    </body>
+
+</html>
